@@ -94,3 +94,23 @@ app.post("/api/get-name", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// 내 정보에서 이름 가져오기
+app.get("/api/get_user", async (req, res) => {
+  const userId = req.query.id;
+
+  try {
+    const [rows] = await pool.query(
+      "SELECT name FROM users WHERE kakao_id = ?",
+      [userId]
+    );
+
+    if (rows.length > 0) {
+      res.json(rows[0]);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
