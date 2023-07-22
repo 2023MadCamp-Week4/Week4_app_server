@@ -8,15 +8,16 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
+// 회원가입
 app.post("/api/user", async (req, res) => {
-  const { id, nickname, email, profileurl, userid, pw } = req.body; // 클라이언트에서 보낸 데이터를 추출
+  const { kakao_id, name, user_id, pw, phone_number, location } = req.body; // 클라이언트에서 보낸 데이터를 추출
 
   try {
     const [result] = await db
       .promise()
       .query(
-        "INSERT INTO users (id, nickname, email, profileurl, userid, pw) VALUES (?, ?, ?, ?, ?, ?)",
-        [id, nickname, email, profileurl, userid, pw]
+        "INSERT INTO users (kakao_id, name, user_id, pw, phone_number, location) VALUES (?, ?, ?, ?, ?, ?)",
+        [kakao_id, name, user_id, pw, phone_number, location]
       );
     res.status(201).json({ message: "New user added!" }); // 새 사용자가 추가되었음을 응답
   } catch (err) {
