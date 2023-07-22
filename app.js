@@ -77,17 +77,17 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.post("/api/get-nickname", async (req, res) => {
+// 이름 가져오기
+app.post("/api/get-name", async (req, res) => {
   const { id } = req.body;
   try {
-    const [rows] = await pool.query("SELECT nickname FROM users WHERE id = ?", [
-      id,
-    ]);
+    const [rows] = await pool.query(
+      "SELECT name FROM users WHERE kakao_id = ?",
+      [id]
+    );
     if (rows.length > 0) {
-      // 해당 ID를 가진 사용자가 DB에 존재하면, 닉네임을 반환
-      res.json({ nickname: rows[0].nickname });
+      res.json({ name: rows[0].name });
     } else {
-      // 해당 ID를 가진 사용자가 DB에 존재하지 않으면, 적절한 메시지와 함께 응답
       res.json({ message: "No user with this ID found." });
     }
   } catch (err) {
