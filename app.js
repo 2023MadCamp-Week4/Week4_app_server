@@ -8,6 +8,10 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
+app.listen(process.env.PORT || 4000, () => {
+  console.log("Server has started on port 4000");
+});
+
 // 회원가입
 app.post("/api/user", async (req, res) => {
   const { kakao_id, name, user_id, pw, phone_number, location } = req.body; // 클라이언트에서 보낸 데이터를 추출
@@ -55,10 +59,6 @@ app.get("/api/user", async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
-
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
 });
 
 app.post("/api/login", async (req, res) => {
