@@ -27,6 +27,16 @@ app.post("/api/user", async (req, res) => {
   }
 });
 
+//테스트용 API
+app.get("/api/usersss", async (req, res) => {
+  try {
+    const [rows, fields] = await pool.query("SELECT * FROM users");
+    res.status(200).json(rows); // 모든 사용자 정보를 응답
+  } catch (err) {
+    res.status(500).json({ message: err.message }); // 에러가 발생한 경우 에러 메시지를 응답
+  }
+});
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
