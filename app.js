@@ -23,12 +23,7 @@ app.post("/api/user", async (req, res) => {
     );
     res.status(201).json({ message: "New user added!" }); // 새 사용자가 추가되었음을 응답
   } catch (err) {
-    // res.status(500).json({ message: err.message }); // 에러가 발생한 경우 에러 메시지를 응답
-    res
-      .status(500)
-      .json({
-        message: `${kakao_id}, ${name}, ${user_id}, ${pw}, ${phone_number}, ${location}`,
-      }); // 에러가 발생한 경우 에러 메시지를 응답
+    res.status(500).json({ message: err.message }); // 에러가 발생한 경우 에러 메시지를 응답
   }
 });
 
