@@ -71,7 +71,7 @@ app.post("/api/login", async (req, res) => {
   const { userid, pw } = req.body; // 클라이언트에서 보낸 사용자 이름과 비밀번호를 추출합니다.
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM users WHERE userid = ? AND pw = ?",
+      "SELECT * FROM users WHERE user_id = ? AND pw = ?",
       [userid, pw]
     );
 
