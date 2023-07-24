@@ -156,7 +156,7 @@ app.get("/api/get_user_status_message", async (req, res) => {
       [id]
     );
     if (rows.length > 0) {
-      res.status(200).json({ statusMessage: rows[0].statusMessage });
+      res.status(200).json({ stateMessage: rows[0].stateMessage });
     } else {
       res.status(404).json({ message: "User not found" });
     }
