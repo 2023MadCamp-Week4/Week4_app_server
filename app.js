@@ -3,6 +3,7 @@ const app = express();
 const pool = require("./db").promise();
 const cors = require("cors");
 const dotenv = require("dotenv");
+const WebSocket = require('ws');
 dotenv.config();
 
 app.use(cors());
@@ -144,3 +145,14 @@ app.post("/api/update_status_message", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+
+//웹 소켓 
+const wss = new WebSocket.Server({port: 4001});
+
+wss.on('connection', (ws) => {
+  console.log("server on ")
+  ws.on("message", data => {
+    console.log(`Received from user: ${data}`)
+  })
+})
