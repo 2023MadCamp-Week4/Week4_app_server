@@ -115,3 +115,13 @@ app.get("/api/get_user", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// 모든 유저 정보 가져오기
+app.get("/api/get_all_users", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM users");
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
