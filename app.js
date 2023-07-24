@@ -128,16 +128,16 @@ app.get("/api/get_all_users", async (req, res) => {
 });
 
 // 상태 메시지 변경
-app.post("/api/update_status_message", async (req, res) => {
-  const { id, statusMessage } = req.body;
+app.post("/api/update_state_message", async (req, res) => {
+  const { id, stateMessage } = req.body;
 
   try {
     const [result] = await pool.query(
       "UPDATE users SET stateMessage = ? WHERE kakao_id = ?",
-      [statusMessage, id]
+      [stateMessage, id]
     );
     if (result.affectedRows > 0) {
-      res.status(200).json({ message: "Status message updated successfully!" });
+      res.status(200).json({ message: "State message updated successfully!" });
     } else {
       res.status(404).json({ message: "User not found" });
     }
