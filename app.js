@@ -152,7 +152,7 @@ app.get("/api/get_user_status_message", async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      "SELECT statusMessage FROM users WHERE kakao_id = ?",
+      "SELECT stateMessage FROM users WHERE kakao_id = ?",
       [id]
     );
     if (rows.length > 0) {
