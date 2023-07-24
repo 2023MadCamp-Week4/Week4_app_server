@@ -19,12 +19,13 @@ app.use((err, req, res, next) => {
 
 // 회원가입
 app.post("/api/user", async (req, res) => {
-  const { kakao_id, name, user_id, pw, phone_number, location } = req.body;
+  const { kakao_id, name, user_id, pw, phone_number, location, profileURL } =
+    req.body;
 
   try {
     const [result] = await pool.query(
-      "INSERT INTO users (kakao_id, name, user_id, pw, phone_number, location) VALUES (?, ?, ?, ?, ?, ?)",
-      [kakao_id, name, user_id, pw, phone_number, location]
+      "INSERT INTO users (kakao_id, name, user_id, pw, phone_number, location, profileURL) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [kakao_id, name, user_id, pw, phone_number, location, profileURL]
     );
     res.status(201).json({ message: "New user added!" });
   } catch (err) {
