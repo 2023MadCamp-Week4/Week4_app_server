@@ -132,7 +132,7 @@ app.post("/api/update_status_message", async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "UPDATE users SET statusMessage = ? WHERE kakao_id = ?",
+      "UPDATE users SET stateMessage = ? WHERE kakao_id = ?",
       [statusMessage, id]
     );
     if (result.affectedRows > 0) {
