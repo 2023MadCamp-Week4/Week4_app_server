@@ -147,7 +147,7 @@ app.post("/api/update_status_message", async (req, res) => {
 });
 
 // 유저의 상태 메시지 가져오기
-app.get("/api/get_user_status_message", async (req, res) => {
+app.get("/api/get_user_state_message", async (req, res) => {
   const { id } = req.query;
 
   try {
