@@ -3,7 +3,7 @@ const app = express();
 const pool = require("./db").promise();
 const cors = require("cors");
 const dotenv = require("dotenv");
-const WebSocket = require('ws');
+const WebSocket = require("ws");
 dotenv.config();
 
 app.use(cors());
@@ -146,13 +146,31 @@ app.post("/api/update_status_message", async (req, res) => {
   }
 });
 
+// 유저의 상태 메시지 가져오기
+app.get("/api/get_user_status_message", async (req, res) => {
+  const { id } = req.query;
 
-//웹 소켓 
-const wss = new WebSocket.Server({port: 4001});
+  try {
+    const [rows] = await pool.query(
+      "SELECT statusMessage FROM users WHERE kakao_id = ?",
+      [id]
+    );
+    if (rows.length > 0) {
+      res.status(200).json({ statusMessage: rows[0].statusMessage });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
-wss.on('connection', (ws) => {
-  console.log("server on ")
-  ws.on("message", data => {
-    console.log(`Received from user: ${data}`)
-  })
-})
+//웹 소켓
+const wss = new WebSocket.Server({ port: 4001 });
+
+wss.on("connection", (ws) => {
+  console.log("server on ");
+  ws.on("message", (data) => {
+    console.log(`Received from user: ${data}`);
+  });
+});
