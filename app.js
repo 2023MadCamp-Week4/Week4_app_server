@@ -174,3 +174,36 @@ wss.on("connection", (ws) => {
     console.log(`Received from user: ${data}`);
   });
 });
+
+// post 눌렀을 때 약속DB에 추가
+app.post("/api/appointment_add", async (req, res) => {
+  const { members, times, place, content, location } = req.body;
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO appointment (members, times, place, content, location) VALUES (?, ?, ?, ?, ?)",
+      [members, times, place, content, location]
+    );
+    res.status(201).json({ message: "New appointment added!" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// 이전 약속 불러오기 (내가 포함된 약속만)
+app.get("/api/past_appointments", async (req, res) => {
+  const currentDate = new Date();
+  const userId = req.query.id;
+
+  try {
+    const [results] = await pool.query(
+      "SELECT * FROM appointment WHERE times < ? AND members LIKE ?",
+      [currentDate, `%${userId}%`]
+    );
+
+    res
+      .status(200)
+      .json({ message: "Fetched past appointments!", data: results });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
