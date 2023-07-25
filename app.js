@@ -3,20 +3,22 @@ const app = express();
 const pool = require("./db").promise();
 const cors = require("cors");
 const dotenv = require("dotenv");
-const WebSocket = require('ws');
 dotenv.config();
+
 
 app.use(cors());
 app.use(express.json());
 
-app.listen(process.env.PORT || 4000, () => {
-  console.log("Server has started on port 4000");
-});
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 
 // 회원가입
 app.post("/api/user", async (req, res) => {
@@ -146,13 +148,33 @@ app.post("/api/update_status_message", async (req, res) => {
   }
 });
 
+//open socket server
+const server = require("http").createServer(app);
 
-//웹 소켓 
-const wss = new WebSocket.Server({port: 4001});
+console.log("server", server);
+const io = require("socket.io")(server,{
+    cors: {
+      origin: '*'
+    }
+  });
 
-wss.on('connection', (ws) => {
-  console.log("server on ")
-  ws.on("message", data => {
-    console.log(`Received from user: ${data}`)
-  })
-})
+io.on('connection', socket => {
+  console.log(`[${socket.id}] socket connected`);
+
+  socket.on('message', (data) => {
+    console.log('Message received: ', data);
+  });
+  
+  socket.on('location', (data) => {
+    console.log('Ones location: ', data);
+    socket.emit('location')
+  });
+
+  socket.on('disconnect', reason => {
+    console.log(`[${socket.id}] socket disconnected - ${reason}`);
+  });
+});
+
+server.listen( 80, () => {
+  console.log("Server has started on port 80");
+});
