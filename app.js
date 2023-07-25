@@ -3,6 +3,10 @@ const app = express();
 const pool = require("./db").promise();
 const cors = require("cors");
 const dotenv = require("dotenv");
+<<<<<<< HEAD
+=======
+const WebSocket = require("ws");
+>>>>>>> cded93c583d14d219a38231dd2c05fd43a247ad9
 dotenv.config();
 
 
@@ -130,16 +134,16 @@ app.get("/api/get_all_users", async (req, res) => {
 });
 
 // 상태 메시지 변경
-app.post("/api/update_status_message", async (req, res) => {
-  const { id, statusMessage } = req.body;
+app.post("/api/update_state_message", async (req, res) => {
+  const { id, stateMessage } = req.body;
 
   try {
     const [result] = await pool.query(
       "UPDATE users SET stateMessage = ? WHERE kakao_id = ?",
-      [statusMessage, id]
+      [stateMessage, id]
     );
     if (result.affectedRows > 0) {
-      res.status(200).json({ message: "Status message updated successfully!" });
+      res.status(200).json({ message: "State message updated successfully!" });
     } else {
       res.status(404).json({ message: "User not found" });
     }
@@ -148,6 +152,7 @@ app.post("/api/update_status_message", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 //open socket server
 const server = require("http").createServer(app);
 
@@ -177,4 +182,66 @@ io.on('connection', socket => {
 
 server.listen( 80, () => {
   console.log("Server has started on port 80");
+=======
+// 유저의 상태 메시지 가져오기
+app.get("/api/get_user_state_message", async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const [rows] = await pool.query(
+      "SELECT stateMessage FROM users WHERE kakao_id = ?",
+      [id]
+    );
+    if (rows.length > 0) {
+      res.status(200).json({ stateMessage: rows[0].stateMessage });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+//웹 소켓
+const wss = new WebSocket.Server({ port: 4001 });
+
+wss.on("connection", (ws) => {
+  console.log("server on ");
+  ws.on("message", (data) => {
+    console.log(`Received from user: ${data}`);
+  });
+});
+
+// post 눌렀을 때 약속DB에 추가
+app.post("/api/appointment_add", async (req, res) => {
+  const { members, times, place, content, location } = req.body;
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO appointment (members, times, place, content, location) VALUES (?, ?, ?, ?, ?)",
+      [members, times, place, content, location]
+    );
+    res.status(201).json({ message: "New appointment added!" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// 이전 약속 불러오기 (내가 포함된 약속만)
+app.get("/api/past_appointments", async (req, res) => {
+  const currentDate = new Date();
+  const userId = req.query.id;
+
+  try {
+    const [results] = await pool.query(
+      "SELECT * FROM appointment WHERE times < ? AND members LIKE ?",
+      [currentDate, `%${userId}%`]
+    );
+
+    res
+      .status(200)
+      .json({ message: "Fetched past appointments!", data: results });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+>>>>>>> cded93c583d14d219a38231dd2c05fd43a247ad9
 });
