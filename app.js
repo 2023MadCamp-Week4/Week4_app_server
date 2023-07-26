@@ -208,7 +208,7 @@ app.get("/api/past_appointments", async (req, res) => {
   }
 });
 
-// 이전 약속 불러오기 (내가 포함된 약속만)
+// 미래 약속 불러오기 (내가 포함된 약속만)
 app.get("/api/future_appointments", async (req, res) => {
   const currentDate = new Date();
   const userId = req.query.id;
@@ -227,6 +227,28 @@ app.get("/api/future_appointments", async (req, res) => {
   }
 });
 
+// 오늘의 약속 불러오기 (내가 포함된 약속만)
+app.get("/api/today_appointments", async (req, res) => {
+  const currentDate = new Date();
+  const startOfDay = new Date(currentDate.setHours(0, 0, 0, 0));
+  const endOfDay = new Date(currentDate.setHours(23, 59, 59, 999));
+  const userId = req.query.id;
+
+  try {
+    const [results] = await pool.query(
+      "SELECT * FROM appointment WHERE times BETWEEN ? AND ? AND members LIKE ?",
+      [startOfDay, endOfDay, `%${userId}%`]
+    );
+
+    res
+      .status(200)
+      .json({ message: "Fetched today's appointments!", data: results });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// kakao_id로 user의 이름 찾기
 app.get("/api/get_username_byid", async (req, res) => {
   const userId = req.query.id;
 
