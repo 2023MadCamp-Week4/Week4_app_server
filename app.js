@@ -179,6 +179,11 @@ wss.on("connection", (ws) => {
 app.post("/api/appointment_add", async (req, res) => {
   console.log("123123");
   const { members, times, place, content, location } = req.body;
+  console.log(members);
+  console.log(times);
+  console.log(place);
+  console.log(content);
+  console.log(location);
   try {
     const [result] = await pool.query(
       "INSERT INTO appointment (members, times, place, content, location) VALUES (?, ?, ?, ?, ?)",
