@@ -253,7 +253,8 @@ app.get("/api/today_appointments", async (req, res) => {
 // kakao_id로 user의 이름 찾기
 app.get("/api/get_username_byid", async (req, res) => {
   const userId = req.query.id;
-
+  console.log(userId);
+  console.log("7777777");
   try {
     const [rows] = await pool.query(
       "SELECT name FROM users WHERE kakao_id = ?",
