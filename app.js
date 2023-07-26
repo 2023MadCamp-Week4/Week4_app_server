@@ -356,3 +356,18 @@ app.post("/api/insert_request2", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// 나에게 온 request2가 있는지 탐지
+app.get("/api/check_request2", async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const [rows] = await pool.execute(
+      "SELECT * FROM request2 WHERE receive_userid = ? AND flag = 0",
+      [id]
+    );
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
