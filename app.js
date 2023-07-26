@@ -378,7 +378,7 @@ app.post("/api/update_request2", async (req, res) => {
 
   try {
     const [result] = await pool.execute(
-      "UPDATE request1 SET flag = ? WHERE id = ?",
+      "UPDATE request2 SET flag = ? WHERE id = ?",
       [flag, id]
     );
 
