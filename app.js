@@ -186,8 +186,8 @@ app.post("/api/appointment_add", async (req, res) => {
   console.log(location);
   try {
     const [result] = await pool.query(
-      "INSERT INTO appointment (members, times, place, content, location) VALUES (?, ?, ?, ?, ?)",
-      [members, times, place, content, location]
+      "INSERT INTO appointment (members, times, place, content, location) VALUES (?, ?, ?, ?, POINT(?, ?))",
+      [members, times, place, content, location.latitude, location.longitude]
     );
     res.status(201).json({ message: "New appointment added!" });
   } catch (err) {
