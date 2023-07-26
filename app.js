@@ -3,26 +3,20 @@ const app = express();
 const pool = require("./db").promise();
 const cors = require("cors");
 const dotenv = require("dotenv");
-<<<<<<< HEAD
-=======
 const WebSocket = require("ws");
->>>>>>> cded93c583d14d219a38231dd2c05fd43a247ad9
 dotenv.config();
-
 
 app.use(cors());
 app.use(express.json());
 
+app.listen(process.env.PORT || 4000, () => {
+  console.log("Server has started on port 4000");
+});
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
 
 // 회원가입
 app.post("/api/user", async (req, res) => {
@@ -152,37 +146,6 @@ app.post("/api/update_state_message", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-//open socket server
-const server = require("http").createServer(app);
-
-console.log("server", server);
-const io = require("socket.io")(server,{
-    cors: {
-      origin: '*'
-    }
-  });
-
-io.on('connection', socket => {
-  console.log(`[${socket.id}] socket connected`);
-
-  socket.on('message', (data) => {
-    console.log('Message received: ', data);
-  });
-  
-  socket.on('location', (data) => {
-    console.log('Ones location: ', data);
-    socket.emit('location')
-  });
-
-  socket.on('disconnect', reason => {
-    console.log(`[${socket.id}] socket disconnected - ${reason}`);
-  });
-});
-
-server.listen( 80, () => {
-  console.log("Server has started on port 80");
-=======
 // 유저의 상태 메시지 가져오기
 app.get("/api/get_user_state_message", async (req, res) => {
   const { id } = req.query;
@@ -243,5 +206,4 @@ app.get("/api/past_appointments", async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
->>>>>>> cded93c583d14d219a38231dd2c05fd43a247ad9
 });
