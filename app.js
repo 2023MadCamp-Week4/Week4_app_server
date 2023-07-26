@@ -179,17 +179,11 @@ wss.on("connection", (ws) => {
 app.post("/api/appointment_add", async (req, res) => {
   const { members, times, place, content, location } = req.body;
   try {
+    const membersString = members.join(",");
     const [result] = await pool.query(
       `INSERT INTO appointment (members, times, place, content, location) 
-       VALUES (JSON_ARRAY(?), ?, ?, ?, JSON_OBJECT('latitude', ?, 'longitude', ?))`,
-      [
-        JSON.stringify(members),
-        times,
-        place,
-        content,
-        location.latitude,
-        location.longitude,
-      ]
+       VALUES (JSON_ARRAY(${membersString}), ?, ?, ?, JSON_OBJECT('latitude', ?, 'longitude', ?))`,
+      [times, place, content, location.latitude, location.longitude]
     );
     res.status(201).json({ message: "New appointment added!" });
   } catch (err) {
