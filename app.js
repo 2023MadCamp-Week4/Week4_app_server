@@ -371,3 +371,19 @@ app.get("/api/check_request2", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// 닫기 버튼을 눌러서 request1 Table의 Flag를 1로 바꾸기
+app.post("/api/update_request2", async (req, res) => {
+  const { id, flag } = req.body;
+
+  try {
+    const [result] = await pool.execute(
+      "UPDATE request1 SET flag = ? WHERE id = ?",
+      [flag, id]
+    );
+
+    res.status(200).json({ message: "request2 table updated!" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
