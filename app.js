@@ -183,7 +183,7 @@ app.post("/api/appointment_add", async (req, res) => {
       `INSERT INTO appointment (members, times, place, content, location) 
        VALUES (JSON_ARRAY(?), ?, ?, ?, JSON_OBJECT('latitude', ?, 'longitude', ?))`,
       [
-        members.join(","),
+        JSON.stringify(members),
         times,
         place,
         content,
