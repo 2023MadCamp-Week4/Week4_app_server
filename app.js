@@ -231,9 +231,10 @@ app.get("/api/get_username_byid", async (req, res) => {
   const userId = req.query.id;
 
   try {
-    const [rows] = await pool.query("SELECT name FROM users WHERE id = ?", [
-      userId,
-    ]);
+    const [rows] = await pool.query(
+      "SELECT name FROM users WHERE kakao_id = ?",
+      [userId]
+    );
 
     if (rows.length > 0) {
       res.json({ name: rows[0].name });
