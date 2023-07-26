@@ -272,12 +272,12 @@ app.get("/api/get_username_byid", async (req, res) => {
 
 // 위치 요청
 app.post("/api/send_request", async (req, res) => {
-  const { send_userid, recieve_userid, appointment_id } = req.body;
+  const { send_userid, receive_userid, appointment_id } = req.body;
 
   try {
     const [result] = await pool.query(
-      "INSERT INTO request1 (send_userid, recieve_userid, appointment_id) VALUES (?, ?, ?)",
-      [send_userid, recieve_userid, appointment_id]
+      "INSERT INTO request1 (send_userid, receive_userid, appointment_id) VALUES (?, ?, ?)",
+      [send_userid, receive_userid, appointment_id]
     );
     res.status(201).json({ message: "Request sent successfully!" });
   } catch (err) {
