@@ -178,13 +178,18 @@ wss.on("connection", (ws) => {
 // post 눌렀을 때 약속DB에 추가
 app.post("/api/appointment_add", async (req, res) => {
   const { members, times, place, content, location } = req.body;
-  const membersJson = `JSON_ARRAY(${members
-    .map((member) => `'${member}'`)
-    .join(",")})`;
   try {
     const [result] = await pool.query(
-      `INSERT INTO appointment (members, times, place, content, location) VALUES (${membersJson}, ?, ?, ?, POINT(?, ?))`,
-      [times, place, content, location.latitude, location.longitude]
+      `INSERT INTO appointment (members, times, place, content, location) 
+       VALUES (JSON_ARRAY(?), ?, ?, ?, JSON_OBJECT('latitude', ?, 'longitude', ?))`,
+      [
+        members.join(","),
+        times,
+        place,
+        content,
+        location.latitude,
+        location.longitude,
+      ]
     );
     res.status(201).json({ message: "New appointment added!" });
   } catch (err) {
